@@ -1,3 +1,4 @@
+import { mEncode, mGenerateRandomId } from '../utils/id';
 import * as pwd from '../utils/pwd';
 
 type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
@@ -23,7 +24,7 @@ interface ICreateUserOptions {
   createAt?: Date;
 }
 
-interface ILoginUserOptions{
+interface ILoginUserOptions {
   email: string;
   passWord: string;
 }
@@ -136,11 +137,8 @@ class User {
 
   private static generateRandomId(uemail: string): string {
     return (
-      uemail.replace(
-        '@',(
-          Math.floor(Math.random() * 0xFFFFFFFF)
-        ).toString(16)
-      ).replace(/[^a-zA-Z0-9_-]/g, '')
+      mEncode(uemail.replace('@', '').replace(/[^a-zA-Z0-9_-]/g, '')) +
+      mGenerateRandomId(4)
     );
   }
 }

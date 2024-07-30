@@ -1,4 +1,4 @@
-import { Inject, Controller, Get, Query, Post, File } from '@midwayjs/core';
+import { Inject, Controller, Get, Query, Post, File} from '@midwayjs/core';
 import { CircleService } from '../service/circle.service';
 
 @Controller('/circle')
@@ -17,7 +17,6 @@ export class CircleController {
     @Query('cname') cname: string,
     @Query('cdesc') cdesc: string,
     @Query('ccreator_id') ccreator_id: string,
-    @Query('cicon') cicon: string,
     @File() ciconFile: any,
   ) {
     if (!cname || !cdesc || !ccreator_id) {
@@ -31,9 +30,10 @@ export class CircleController {
       const circleInfo = await this.circleService.createCircle({
         cname,
         cdesc,
-        ccreator_id,
-        cicon,
+        ccreator_id
       });
+      let t = ciconFile.filename.split('.');
+      ciconFile.filename = circleInfo.cicon + '.' + t[t.length - 1];
       return {
         status: 'success',
         msg: 'OK',

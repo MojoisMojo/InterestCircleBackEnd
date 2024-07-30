@@ -35,7 +35,7 @@ export class UserController {
     // 根据兴趣返回
   }
 
-  @Post('/createUser')
+  @Post('/create')
   async createUser(
     @Query('name') name: string,
     @Query('email') email: string,
