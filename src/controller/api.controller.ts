@@ -5,12 +5,12 @@ import {
   Post,
   Files,
   Fields,
-  Query,
+  // Query,
+  Body,
 } from '@midwayjs/core';
-import { join } from 'path';
 import { Context } from '@midwayjs/koa';
 
-const imgDir = './public/img';
+const imgDir = 'public/img';
 
 @Controller('/api')
 export class APIController {
@@ -18,19 +18,12 @@ export class APIController {
   ctx: Context;
 
   @Get('/show/img')
-  async showImg(@Query('imgUrl') imgUrl: string) {
-    let filePath = join(imgDir,imgUrl);
-    // let file = open(filePath);
-    // if (!file) {
-    //   return {
-    //     status: 'failed',
-    //     msg: 'no file',
-    //   };
-    // }
+  async showImg(@Body('imgPath') imgPath: string) {
+    const imgUrl = `http://127.0.0.1:7002/${imgDir}/${imgPath}`;
     return {
       status: 'success',
       msg: 'OK',
-      data: { img: filePath },
+      data: { imgUrl },
     };
   }
 

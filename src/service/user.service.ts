@@ -1,48 +1,30 @@
-import { Provide, sleep } from '@midwayjs/core';
-import { IGetUserOptions, ICreateUserOptions, ILoginUserOptions } from '../model/user.model';
-import { UserInfo } from '../model/user.model';
+import { Provide, Inject } from '@midwayjs/core';
+import { UserRepository } from '../repository/user.repository';
+import { IUser } from '../interface/user.interface';
 import { User } from '../model/user.model';
-import { static_mojo_user } from '../static/static';
 
 @Provide()
 export class UserService {
-  async getUser(options: IGetUserOptions): Promise<UserInfo | null> {
-    let { uid, email } = options;
-    console.log('get user', uid, email);
-    await sleep(1000);
-    let user = new User(static_mojo_user);
-    return user.getUserInfo();
+  @Inject()
+  userRepository: UserRepository;
+
+  async createUser(user: IUser): Promise<User> {
+    return this.userRepository.save(user);
   }
-  async getUserAllInfo(options: IGetUserOptions): Promise<User | null> {
-    let { uid, email } = options;
-    const { name, bio, avatarUrl, likesCount, circlesCount } = static_mojo_user;
-    if (!uid) {
-      uid = static_mojo_user.uid;
-    }
-    if (!email) {
-      email = static_mojo_user.email;
-    }
-    return new User({
-      uid,
-      name,
-      email,
-      bio,
-      avatarUrl,
-      passWord: 'mojo',
-      likesCount,
-      circlesCount,
-    });
+
+  async getUserById(uid: string): Promise<User> {
+    return this.userRepository.findOne({where: {uid}});
   }
-  async createUser(options: ICreateUserOptions): Promise<UserInfo> {
-    let user = new User(options);
-    return user.getUserInfo();
+
+  async getAllUsers(): Promise<User[]> {
+    return this.userRepository.find();
   }
-  async loginUser(options: ILoginUserOptions): Promise<UserInfo | null> {
-    let { email, passWord } = options;
-    let user: User | null = await this.getUserAllInfo({ email });
-    if (user && user.checkPwd(passWord)) {
-      return user.getUserInfo();
-    }
-    return null;
+
+  async updateUser(uid: string, user: Partial<IUser>): Promise<void> {
+    await this.userRepository.update(uid, user);
+  }
+
+  async deleteUser(uid: string): Promise<void> {
+    await this.userRepository.delete(uid);
   }
 }

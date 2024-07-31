@@ -16,3 +16,5 @@ data/
 *.un~
 .tsbuildinfo
 .tsbuildinfo.*
+*.sqlite
+*.log

@@ -75,6 +75,9 @@ class Circle implements IFullCircleInfo {
       ccreator_id.slice(4)
     );
   }
+  public getCiconUrl(): string {
+    return `/circle/${this.cid}`;
+  }
 }
 
 export { ICreateCircleInfo, IFullCircleInfo, Circle };

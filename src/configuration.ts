@@ -5,6 +5,8 @@ import * as crossDomain from '@midwayjs/cross-domain';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
 import * as upload from '@midwayjs/upload';
+import * as staticFile from '@midwayjs/static-file';
+import * as orm from '@midwayjs/orm';
 import { join } from 'path';
 import { DefaultErrorFilter } from './filter/default.filter';
 import { NotFoundFilter } from './filter/notfound.filter';
@@ -14,9 +16,11 @@ import { ReportMiddleware } from './middleware/report.middleware';
   imports: [
     koa,
     ws,
+    orm,
     crossDomain,
     validate,
     upload,
+    staticFile,
     {
       component: info,
       enabledEnvironment: ['local'],
