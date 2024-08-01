@@ -1,36 +1,32 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  CreateDateColumn,
-} from 'typeorm';
+import { IUserInfo } from '../interface/user.interface';
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn('uuid')
+export class UserInfo implements IUserInfo {
   uid: string;
-
-  @Column()
   name: string;
-
-  @Column({ unique: true })
   email: string;
-
-  @Column()
   bio: string;
-
-  @Column()
   avatarUrl: string;
-
-  @Column({ default: 0 })
   likesCount: number;
-
-  @Column({ default: 0 })
   circlesCount: number;
-
-  @CreateDateColumn()
   createAt: Date;
 
-  @Column()
-  passWord: string;
+  constructor({
+    uid,
+    name,
+    email,
+    bio,
+    avatarUrl,
+    likesCount,
+    circlesCount,
+    createAt,
+  }: IUserInfo) {
+    this.uid = uid;
+    this.name = name;
+    this.email = email;
+    this.bio = bio;
+    this.avatarUrl = avatarUrl;
+    this.likesCount = likesCount;
+    this.circlesCount = circlesCount;
+    this.createAt = createAt;
+  }
 }

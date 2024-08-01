@@ -1,23 +1,31 @@
-import { Inject, Controller, Get, Query, Post, File} from '@midwayjs/core';
+import {
+  Inject,
+  Controller,
+  Get,
+  Query,
+  Post,
+  File,
+  Param,
+  Body,
+} from '@midwayjs/core';
 import { CircleService } from '../service/circle.service';
+import { Context } from '@midwayjs/koa';
+import { ICreateCircleOptions } from '../interface/circle.interface';
 
-@Controller('/circle')
+@Controller('/circles')
 export class CircleController {
+  @Inject()
+  ctx: Context;
+
   @Inject()
   circleService: CircleService;
 
-  @Get('/get/info')
-  async getInfo(@Query('cid') cid: string) {}
+  @Get('/:cid')
+  async getInfo(@Param('cid') cid: string) {}
 
-  @Get('/get/posts')
-  async getPosts(@Query('cid') cid: string) {}
-
-  @Post('/create')
+  @Post('/')
   async create(
-    @Query('cname') cname: string,
-    @Query('cdesc') cdesc: string,
-    @Query('ccreator_id') ccreator_id: string,
-    @File() ciconFile: any,
+    @Body() { cname, cdesc, ccreator_id, cicon }: ICreateCircleOptions
   ) {
     if (!cname || !cdesc || !ccreator_id) {
       return {
@@ -26,20 +34,17 @@ export class CircleController {
       };
     }
     try {
-      console.log('file:', ciconFile);
       const circleInfo = await this.circleService.createCircle({
         cname,
         cdesc,
-        ccreator_id
+        cicon,
+        ccreator_id,
       });
-      let t = ciconFile.filename.split('.');
-      ciconFile.filename = circleInfo.cicon + '.' + t[t.length - 1];
       return {
         status: 'success',
         msg: 'OK',
         data: {
           circle: circleInfo,
-          file: ciconFile,
         },
       };
     } catch (e) {

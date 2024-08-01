@@ -1,30 +1,82 @@
 import { Provide, Inject } from '@midwayjs/core';
-import { UserRepository } from '../repository/user.repository';
-import { IUser } from '../interface/user.interface';
-import { User } from '../model/user.model';
+import { InjectEntityModel } from '@midwayjs/typegoose';
+import { ReturnModelType } from '@typegoose/typegoose';
+import { User } from '../entity/user.entity';
+import { UserInfo } from '../model/user.model';
+import { mEncode, mGenerateRandomId } from '../utils/id';
+import {
+  ICreateUserOptions,
+  IGetUserOptions,
+} from '../interface/user.interface';
+import { Context } from '@midwayjs/koa';
+import { assert } from 'console';
 
 @Provide()
 export class UserService {
   @Inject()
-  userRepository: UserRepository;
+  ctx: Context;
 
-  async createUser(user: IUser): Promise<User> {
-    return this.userRepository.save(user);
+  @InjectEntityModel(User)
+  userModel: ReturnModelType<typeof User>;
+
+  async createUser({
+    email,
+    name,
+    password,
+  }: ICreateUserOptions): Promise<UserInfo | null> {
+    try {
+      const user = await this.userModel.create({
+        uid: UserService.generateUid(email),
+        email: email,
+        password: mEncode(password),
+        name: name,
+      } as User);
+      return user ? user.getUserInfo() : null;
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return null;
+    }
   }
-
-  async getUserById(uid: string): Promise<User> {
-    return this.userRepository.findOne({where: {uid}});
+  async getUserInfo(options: IGetUserOptions): Promise<UserInfo | null> {
+    let { uid, email } = options;
+    assert(uid || email, 'uid or email is required');
+    const user = uid
+      ? await this.userModel.findOne({ uid }).exec()
+      : await this.userModel.findOne({ email }).exec();
+    if (!user) {
+      return null;
+    }
+    return user.getUserInfo();
   }
-
-  async getAllUsers(): Promise<User[]> {
-    return this.userRepository.find();
+  async getUsersInfo(uids: string[]): Promise<UserInfo[]> {
+    try {
+      const users = await this.userModel.find({ uid: { $in: uids } }).exec();
+      return users.map(user => user.getUserInfo());
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return [];
+    }
   }
-
-  async updateUser(uid: string, user: Partial<IUser>): Promise<void> {
-    await this.userRepository.update(uid, user);
+  async checkPassword({
+    email,
+    password,
+  }: {
+    email: string;
+    password: string;
+  }): Promise<UserInfo | null> {
+    const user = await this.userModel.findOne({ email }).exec();
+    if (!user) {
+      return null;
+    }
+    let res = user.checkPassword(password);
+    if (!res) {
+      return null;
+    }
+    return user.getUserInfo();
   }
-
-  async deleteUser(uid: string): Promise<void> {
-    await this.userRepository.delete(uid);
+  private static generateUid(uemail: string): string {
+    return mEncode(
+      uemail.replace('@', mGenerateRandomId(4)).replace(/[^a-zA-Z0-9_-]/g, '')
+    );
   }
 }

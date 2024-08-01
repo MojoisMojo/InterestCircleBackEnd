@@ -6,7 +6,7 @@ const static_empty_circle_info = {
   ctime: null,
   cicon: '',
   cposts: 0,
-  cusers: 0,
+  cmembers: 0,
   cpopularity: 0,
 };
 
@@ -18,7 +18,7 @@ const static_circle_info = {
   ctime: new Date('2021-10-01'),
   cicon: '/src/assets/img/gameCirclePic.png',
   cposts: 100,
-  cusers: 100,
+  cmembers: 100,
   cpopularity: 100,
 };
 
@@ -30,7 +30,7 @@ const static_circle_info2 = {
   ctime: new Date('2021-10-01'),
   cicon: '/src/assets/img/FamilyCirclePic.png',
   cposts: 100,
-  cusers: 100,
+  cmembers: 100,
   cpopularity: 100,
 };
 
@@ -42,7 +42,7 @@ const static_circle_info3 = {
   ctime: new Date('2022-01-15'),
   cicon: '/src/assets/img/cat1.png',
   cposts: 80,
-  cusers: 150,
+  cmembers: 150,
   cpopularity: 200,
 };
 
@@ -54,7 +54,7 @@ const static_circle_info4 = {
   ctime: new Date('2022-05-20'),
   cicon: '/src/assets/img/cat2.png',
   cposts: 120,
-  cusers: 300,
+  cmembers: 300,
   cpopularity: 250,
 };
 
@@ -66,7 +66,7 @@ const static_circle_info5 = {
   ctime: new Date('2022-08-30'),
   cicon: '/src/assets/img/cat3.png',
   cposts: 60,
-  cusers: 90,
+  cmembers: 90,
   cpopularity: 150,
 };
 
@@ -78,7 +78,7 @@ const static_circle_info6 = {
   ctime: new Date('2022-03-10'),
   cicon: '/src/assets/img/cat4.png',
   cposts: 45,
-  cusers: 200,
+  cmembers: 200,
   cpopularity: 180,
 };
 
@@ -90,7 +90,7 @@ const static_circle_info7 = {
   ctime: new Date('2022-07-22'),
   cicon: '/src/assets/img/hh1.jpg',
   cposts: 70,
-  cusers: 110,
+  cmembers: 110,
   cpopularity: 210,
 };
 
@@ -102,7 +102,7 @@ const static_circle_info8 = {
   ctime: new Date('2022-09-15'),
   cicon: '/src/assets/img/hh2.jpg',
   cposts: 95,
-  cusers: 250,
+  cmembers: 250,
   cpopularity: 300,
 };
 
@@ -114,7 +114,7 @@ const static_circle_info9 = {
   ctime: new Date('2022-11-30'),
   cicon: 'https://www.dmoe.cc/random.php',
   cposts: 120,
-  cusers: 320,
+  cmembers: 320,
   cpopularity: 350,
 };
 
@@ -126,7 +126,7 @@ const static_circle_info10 = {
   ctime: new Date('2023-01-05'),
   cicon: 'https://www.dmoe.cc/random.php',
   cposts: 85,
-  cusers: 180,
+  cmembers: 180,
   cpopularity: 220,
 };
 

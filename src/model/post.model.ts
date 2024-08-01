@@ -1,53 +1,57 @@
-type tPosterInfo = {
+import {
+  IPosterInfo,
+  IPostInfo,
+  IPostContentInfo,
+} from '../interface/post.interface';
+
+export class PosterInfo implements IPosterInfo {
   uid: string;
   name: string;
   avatarUrl: string;
-};
+  constructor({ uid, name, avatarUrl }: IPosterInfo) {
+    this.uid = uid;
+    this.name = name;
+    this.avatarUrl = avatarUrl;
+  }
+}
 
-type tPostInfo = {
+export class PostContentInfo implements IPostContentInfo {
   cid: string;
   pid: string;
   time: Date;
   content: string;
   imgs: string[];
-
   looks: number;
   likes: number;
   comments: number;
-
-  poster: tPosterInfo;
-};
-
-type tCreatePostOptions = {
-  content: string;
-  cid: string;
-  poster: tPosterInfo;
-  imgs?: string[];
-};
-
-class Post{
-  postInfo: tPostInfo;
-  constructor(options: tCreatePostOptions){
-    let {content, cid, poster, imgs} = options;
-    let time = new Date();
-    this.postInfo = {
-      pid: Post.generateRandomId(cid, poster.uid, time),
-      time: time,
-      content: content,
-      imgs: imgs ? imgs : [],
-      likes: 0,
-      looks: 0,
-      comments: 0,
-      poster: poster,
-      cid: cid,
-    };
+  constructor({
+    pid,
+    time,
+    content,
+    imgs,
+    likes,
+    looks,
+    comments,
+    cid,
+  }: IPostContentInfo) {
+    this.pid = pid;
+    this.time = time;
+    this.content = content;
+    this.imgs = imgs;
+    this.likes = likes;
+    this.looks = looks;
+    this.comments = comments;
+    this.cid = cid;
   }
+}
 
-  private static generateRandomId(cid:string, uid:string, time:Date): string {
-    return cid + uid + Number(time.toISOString().replace(/[^0-9]/g, '')).toString(36);
-  }
-
-  public getPostInfo(): tPostInfo {
-    return this.postInfo;
+export class PostInfo implements IPostInfo {
+  posterInfo: IPosterInfo;
+  postContent: IPostContentInfo;
+  isLiked: boolean;
+  constructor({ postContent, posterInfo, isLiked }: IPostInfo) {
+    this.postContent = postContent;
+    this.posterInfo = posterInfo;
+    this.isLiked = isLiked;
   }
 }

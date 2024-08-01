@@ -1,7 +1,7 @@
 import { MidwayConfig } from '@midwayjs/core';
 import { uploadWhiteList } from '@midwayjs/upload';
-// import { tmpdir } from 'os';
 import { join } from 'path';
+import { User } from '../entity/user.entity';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -15,13 +15,30 @@ export default {
 
   cors: {
     // origin: '/^(http://192.168.d{1,3}.d{1,3}(:d+)?|http://localhost(:d+)?)$/',
-    origin: '/^http://localhost(:d+)?$/',
+    // origin: p => {
+    //   let { header } = p;
+    //   const origin = header.origin;
+    //   console.log('origin:', origin);
+    //   return /^http:\/\/localhost(:\d+)?$/.test(origin) ? origin : false;
+    // },
+    origin: '*',
   },
 
-  orm: {
-    type: 'sqlite',
-    database: 'database.sqlite',
-    synchronize: true,
+  mongoose: {
+    client: {
+      uri: 'mongodb://localhost:27017/InterectCircle',
+      options: {
+        ssl: false,
+        serverApi: {
+          version: '1',
+          strict: true,
+          deprecationErrors: true,
+        },
+        connectTimeoutMS: 60 * 1000,
+        socketTimeoutMS: 60 * 1000,
+      },
+      entities: [User],
+    },
   },
 
   dirs: {
