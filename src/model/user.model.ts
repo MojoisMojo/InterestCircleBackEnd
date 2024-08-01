@@ -24,7 +24,7 @@ export class UserInfo implements IUserInfo {
     this.name = name;
     this.email = email;
     this.bio = bio;
-    this.avatarUrl = avatarUrl;
+    this.avatarUrl = `/public/avatar/${avatarUrl ? avatarUrl : 'avatar.svg'}`;
     this.likesCount = likesCount;
     this.circlesCount = circlesCount;
     this.createAt = createAt;

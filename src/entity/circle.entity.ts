@@ -1,22 +1,22 @@
 import {
-  pre,
+  // pre,
   prop,
   modelOptions,
-  getModelForClass,
+  // getModelForClass,
 } from '@typegoose/typegoose';
-import { CircleMember } from './circleMember.entity';
+// import { CircleMember } from './circleMember.entity';
 import { CircleInfo } from '../model/circle.model';
 
 // 获取 CircleMember 模型
-const CircleMemberModel = getModelForClass(CircleMember);
+// const CircleMemberModel = getModelForClass(CircleMember);
 
 @modelOptions({
   schemaOptions: { collection: 'Circles' }, // 设置集合名称
 })
-@pre<Circle>('findOneAndDelete', async function (next) {
-  await CircleMemberModel.deleteMany({ cid: this.cid });
-  next();
-})
+// @pre<Circle>('findOneAndDelete', async function (next) {
+//   await CircleMemberModel.deleteMany({ cid: this.cid });
+//   next();
+// })
 export class Circle {
   @prop({ required: true, unique: true })
   public cid: string;

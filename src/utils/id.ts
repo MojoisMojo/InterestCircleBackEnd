@@ -138,7 +138,6 @@ function mGenerateRandomId(length: number = 8): string {
 }
 
 function mEncode(input: string): string {
-  return input;
   return input
     .split('')
     .map(char => encodeDict[char] || char)
@@ -146,7 +145,6 @@ function mEncode(input: string): string {
 }
 
 function mDecode(input: string): string {
-  return input;
   return input
     .split('')
     .map(char => decodeDict[char] || char)

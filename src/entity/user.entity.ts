@@ -1,28 +1,31 @@
 import {
-  pre,
+  // pre,
   prop,
   modelOptions,
-  getModelForClass,
+  // getModelForClass,
+  // index,
 } from '@typegoose/typegoose';
 import { mDecode } from '../utils/id';
 import { UserInfo } from '../model/user.model';
 import { PosterInfo } from '../model/post.model';
 import { CommenterInfo } from '../model/comment.model';
-import { CircleMember } from './circleMember.entity';
+// import { CircleMember } from './circleMember.entity';
 
-// 获取 CircleMember 模型
-const CircleMemberModel = getModelForClass(CircleMember);
+// // 获取 CircleMember 模型
+// const CircleMemberModel = getModelForClass(CircleMember);
 
 @modelOptions({
-  schemaOptions: { collection: 'Users' }, // 设置集合名称
+  schemaOptions: {
+    collection: 'Users'
+  }, // 设置集合名称
 })
-@pre<User>('findOneAndDelete', async function (next) {
-  await CircleMemberModel.deleteMany({ uid: this.uid });
-  next();
-})
+// @pre<User>('findOneAndDelete', async function (next) {
+//   await CircleMemberModel.deleteMany({ uid: this.uid });
+//   next();
+// })
 export class User {
   @prop({ required: true, unique: true })
-  public uid: string;
+  public uid!: string;
 
   @prop()
   public name: string;
@@ -76,6 +79,6 @@ export class User {
       uid: this.uid,
       name: this.name,
       avatarUrl: this.avatarUrl,
-    })
+    });
   }
 }

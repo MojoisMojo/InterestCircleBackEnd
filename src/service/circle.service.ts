@@ -10,6 +10,9 @@ import { CircleMember } from '../entity/circleMember.entity';
 
 @Provide()
 export class CircleService {
+  // private totalCirclesCache: number | null = null;
+  // private cacheDuration = 1000 * 60 * 2; // 2 minutes
+
   @Inject()
   ctx: Context;
 
@@ -28,7 +31,7 @@ export class CircleService {
     try {
       let time = new Date();
       let cid = CircleService.generateCid(cname, ccreator_id, time);
-      cicon = CircleService.generateCicon(cid, time, cicon);
+      cicon = CircleService.generateCicon(cid, cicon);
       const circle = await this.circleModel.create({
         cid: cid,
         cname: cname,
@@ -44,12 +47,30 @@ export class CircleService {
     }
   }
 
-  // 获取 uid 所在的所有圈子 的 信息
-  async getCirclesInfoByUid(uid: string): Promise<CircleInfo[]> {
+  async getCircleInfo(cid: string): Promise<CircleInfo | null> {
     try {
-      // 获取圈子 ID 列表
-      const circleMembers = await this.circleMemberModel.find({ uid }).exec();
-      if (!circleMembers || circleMembers.length === 0) {
+      const circle = await this.circleModel.findOne({ cid }).exec();
+      return circle ? circle.getCircleInfo() : null;
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return null;
+    }
+  }
+
+  // 限制地 随机获取 默认30个 获取 uid 所在的所有圈子 的 信息
+  async getLimitedUserCirclesInfo(
+    uid: string,
+    limit: number = 30
+  ): Promise<CircleInfo[] | null> {
+    try {
+      // 获取圈子 ID 列表, 这里
+      const circleMembers = await this.circleMemberModel
+        .aggregate([{ $match: { uid } }, { $sample: { size: limit } }]) // 这里我们假设用户的圈子数不多()
+        .exec();
+      if (!circleMembers) {
+        return null;
+      }
+      if (circleMembers.length === 0) {
         return [];
       }
       const circleIds = circleMembers.map(member => member.cid);
@@ -61,23 +82,96 @@ export class CircleService {
         return [];
       }
       // 返回圈子信息列表
-      return circles.map(circle => circle.getCircleInfo());
+      return circles.map((circle: Circle) => circle.getCircleInfo());
     } catch (e) {
       this.ctx.logger.error(e);
-      return [];
+      return null;
     }
   }
-
-  async getCircleInfo(cid: string): Promise<CircleInfo | null> {
+  // 限制地随机推荐圈子
+  async getLimitedRecommendedCirclesInfo(
+    uid: string,
+    limit: number = 50
+  ): Promise<CircleInfo[] | null> {
     try {
-      const circle = await this.circleModel.findOne({ cid }).exec();
-      return circle ? circle.getCircleInfo() : null;
+      const recommendedCircles = await this.circleModel
+        .aggregate([{ $sample: { size: limit } }])
+        .exec();
+      if (!recommendedCircles) {
+        return null;
+      }
+      if (recommendedCircles.length === 0) {
+        return [];
+      }
+      return recommendedCircles.map(circle => circle.getCircleInfo());
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return null;
+    }
+  }
+  // 分批获取用户所有圈子的信息
+  async getUserAllCirclesInfoByBatch(
+    uid: string,
+    loadedIds: string[],
+    limit: number,
+    page: number = -1
+  ): Promise<CircleInfo[] | null> {
+    try {
+      const recommendedCircles = await this.circleModel
+        .aggregate([
+          { $match: { cid: { $nin: loadedIds } } }, // 排除已加载的记录
+          { $sample: { size: limit } },
+        ])
+        .exec();
+
+      if (!recommendedCircles) {
+        return null;
+      }
+      if (recommendedCircles.length === 0) {
+        return [];
+      }
+      return recommendedCircles.map(circle => circle.getCircleInfo());
     } catch (e) {
       this.ctx.logger.error(e);
       return null;
     }
   }
 
+  /**分批获取推荐圈子的信息
+   *TODO: 实现推荐圈子的逻辑
+   *初步的算法是 随机推荐 一些圈子
+   *之后可以根据用户的兴趣爱好，推荐相关的圈子
+   */
+  async getRecommendedCirclesInfoByBatch(
+    uid: string, // 因为是随机算法，现在也没啥用
+    limit: number,
+    loadedIds: string[],
+    page: number = -1 // 页码作为接口放着，不用
+  ): Promise<CircleInfo[] | null> {
+    try {
+      const totalCircles = await this.circleModel.countDocuments().exec();
+      const sampleSize = Math.min(totalCircles - loadedIds.length, limit); // 确保 sampleSize 不超过剩余记录数
+
+      const recommendedCircles = await this.circleModel
+        .aggregate([
+          { $match: { cid: { $nin: loadedIds } } }, // 排除已加载的记录
+          { $sample: { size: sampleSize } },
+        ])
+        .exec();
+
+      if (!recommendedCircles) {
+        return null;
+      }
+      if (recommendedCircles.length === 0) {
+        return [];
+      }
+
+      return recommendedCircles.map(circle => circle.getCircleInfo());
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return null;
+    }
+  }
   private static generateCid(name: string, uid: string, time: Date): string {
     return (
       uid.slice(0, 4) +
@@ -87,7 +181,9 @@ export class CircleService {
     );
   }
 
-  private static generateCicon(cid: string, time: Date, cicon): string {
-    return '';
+  private static generateCicon(cid: string, cicon: string): string {
+    let t = cicon.split('.');
+    let typeString = t[t.length - 1];
+    return `${cid}.${typeString}`;
   }
 }

@@ -51,7 +51,7 @@ export class UserService {
   async getUsersInfo(uids: string[]): Promise<UserInfo[]> {
     try {
       const users = await this.userModel.find({ uid: { $in: uids } }).exec();
-      return users.map(user => user.getUserInfo());
+      return users.map((user: User) => user.getUserInfo());
     } catch (e) {
       this.ctx.logger.error(e);
       return [];

@@ -18,9 +18,17 @@ export class UserController {
   @Inject()
   userService: UserService;
 
-  @Get('/')
+  @Post('/login')
   async login(@Body() body: { email: string; password: string }) {
+    console.log(body);
     let { email, password } = body;
+    if(!email || !password){
+      return {
+        stauts:'failed',
+        msg:'未收到用户名或密码',
+        data:{}
+      }
+    }
     let userInfo = await this.userService.checkPassword({ email, password });
     if (!userInfo) {
       return {
@@ -36,7 +44,7 @@ export class UserController {
       data: { user: userInfo },
     };
   }
-  @Post('/')
+  @Post('/register')
   async register(@Body() options: ICreateUserOptions) {
     this.ctx.logger.debug('options:', options);
     let useInfo = await this.userService.createUser(options);
@@ -57,7 +65,7 @@ export class UserController {
   @Get('/uid/:uid')
   async getUserById(@Param('uid') uid: string) {
     this.ctx.logger.debug('uid:', uid);
-    let userInfo = this.userService.getUserInfo({ uid });
+    let userInfo = await this.userService.getUserInfo({ uid });
     return userInfo
       ? { status: 'success', data: { user: userInfo }, msg: '获取成功' }
       : { status: 'failed', data: { uid }, msg: '获取失败' };
@@ -65,7 +73,7 @@ export class UserController {
   @Get('/email/:email')
   async getUserByEmail(@Param('email') email: string) {
     this.ctx.logger.debug('email:', email);
-    let userInfo = this.userService.getUserInfo({ email });
+    let userInfo = await this.userService.getUserInfo({ email });
     return userInfo
       ? { status: 'success', data: { user: userInfo }, msg: '获取成功' }
       : { status: 'failed', data: { email }, msg: '获取失败' };

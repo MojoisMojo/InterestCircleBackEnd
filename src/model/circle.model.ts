@@ -24,23 +24,9 @@ export class CircleInfo implements ICircleInfo {
     this.cname = cname;
     this.cdesc = cdesc;
     this.ctime = ctime;
-    this.cicon = cicon;
+    this.cicon = `/public/circle/${cicon}`; // 添加统一的相对路径
     this.cposts = cposts;
     this.cmembers = cmembers;
     this.cpopularity = cpopularity;
   }
 }
-
-//     this.cicon = cicon ? cicon : mGenerateRandomId(8) + this.cid;
-//   private static generateRandomId(
-//     cname: string,
-//     ccreator_id: string,
-//     ctime: Date
-//   ): string {
-//     return (
-//       ccreator_id.slice(0, 4) +
-//       mGenerateRandomId(4) +
-//       (ctime.getTime()).toString(36) +
-//       ccreator_id.slice(4)
-//     );
-//   }
