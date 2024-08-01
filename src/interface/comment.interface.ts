@@ -16,7 +16,10 @@ export interface ICommentInfo {
   time: Date;
 }
 
-export interface IComment extends ICreateCommentOptions {
+export interface IComment {
   comid: string;
   time: Date;
+  commenter_id: string;
+  content: string;
+  pid: string;
 }
