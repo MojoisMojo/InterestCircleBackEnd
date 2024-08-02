@@ -5,18 +5,18 @@ import {
   // getModelForClass,
 } from '@typegoose/typegoose';
 // import { CircleMember } from './circleMember.entity';
-import { CircleInfo } from '../model/circle.model';
+import { CircleInfo, CircleWithJoinedInfo } from '../model/circle.model';
 
 // 获取 CircleMember 模型
 // const CircleMemberModel = getModelForClass(CircleMember);
 
-@modelOptions({
-  schemaOptions: { collection: 'Circles' }, // 设置集合名称
-})
 // @pre<Circle>('findOneAndDelete', async function (next) {
 //   await CircleMemberModel.deleteMany({ cid: this.cid });
 //   next();
 // })
+@modelOptions({
+  schemaOptions: { collection: 'Circles' }, // 设置集合名称
+})
 export class Circle {
   @prop({ required: true, unique: true })
   public cid: string;
@@ -39,7 +39,7 @@ export class Circle {
   @prop({ default: 0 })
   public cposts: number;
 
-  @prop({ default: 0 })
+  @prop({ default: 1 })
   public cmembers: number; /// TODO: update this when member in/out
 
   @prop({ default: 0 })
@@ -55,6 +55,13 @@ export class Circle {
       cposts: this.cposts,
       cmembers: this.cmembers,
       cpopularity: this.cpopularity,
+    });
+  }
+
+  public getCircleWithJoinedInfo(isJoined?: boolean): CircleWithJoinedInfo {
+    return new CircleWithJoinedInfo({
+      circle: this.getCircleInfo(),
+      isJoined: isJoined || false,
     });
   }
 }

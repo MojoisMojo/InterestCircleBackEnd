@@ -1,4 +1,7 @@
-import { IUserInfo } from '../interface/user.interface';
+import { IUserInfo, IUserSinpleInfo } from '../interface/user.interface';
+import { avatarPath } from '../static/mPath';
+const userAvatarUrl = (path: string) =>
+  [...avatarPath, path ? path : 'avatar.svg'].join('/');
 
 export class UserInfo implements IUserInfo {
   uid: string;
@@ -24,9 +27,23 @@ export class UserInfo implements IUserInfo {
     this.name = name;
     this.email = email;
     this.bio = bio;
-    this.avatarUrl = `/public/avatar/${avatarUrl ? avatarUrl : 'avatar.svg'}`;
+    this.avatarUrl = userAvatarUrl(avatarUrl);
     this.likesCount = likesCount;
     this.circlesCount = circlesCount;
     this.createAt = createAt;
+  }
+}
+
+export class UserSingpleInfo implements IUserSinpleInfo {
+  uid: string;
+  name: string;
+  avatarUrl: string;
+  bio: string;
+
+  constructor({ uid, name, avatarUrl, bio }: IUserSinpleInfo) {
+    this.uid = uid;
+    this.name = name;
+    this.avatarUrl = userAvatarUrl(avatarUrl);
+    this.bio = bio;
   }
 }

@@ -79,6 +79,14 @@ export class UserController {
       : { status: 'failed', data: { email }, msg: '获取失败' };
   }
 
+  @Get('/cid/:cid')
+  async getUsersByCid(@Param('cid') cid: string) {
+    this.ctx.logger.debug('cid:', cid);
+    let usersInfo = await this.userService.getUsersInfoByCid(cid);
+    return usersInfo
+      ? { status: 'success', data: { users: usersInfo }, msg: '获取成功' }
+      : { status: 'failed', data: { cid }, msg: '获取失败' };
+  }
   // @Put('/:uid') 暂时不需要实现
   // async updateUser(@Param() uid: string, @Body() user: Partial<IUser>) {
   //   return this.userService.updateUser(uid, user);

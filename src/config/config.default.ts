@@ -2,6 +2,10 @@ import { MidwayConfig } from '@midwayjs/core';
 import { uploadWhiteList } from '@midwayjs/upload';
 import { join } from 'path';
 import { User } from '../entity/user.entity';
+import { Circle } from '../entity/circle.entity';
+import { CircleMember } from '../entity/circleMember.entity';
+import { Mpost } from '../entity/post.entity';
+import { Mcomment } from '../entity/comment.entity';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -37,7 +41,7 @@ export default {
         connectTimeoutMS: 60 * 1000,
         socketTimeoutMS: 60 * 1000,
       },
-      entities: [User],
+      entities: [User, Circle, CircleMember, Mpost, Mcomment],
     },
   },
 
@@ -72,12 +76,12 @@ export default {
     // whitelist: string[]，文件扩展名白名单
     whitelist: uploadWhiteList.filter(ext => ext !== '.pdf'),
     // tmpdir: string，上传的文件临时存储路径
-    tmpdir: join(__dirname, '../tmp_dir/midway-upload-files'),
+    tmpdir: join(__dirname, '../../tmp_dir/midway-upload-files'),
     // cleanTimeout: number，上传的文件在临时目录中多久之后自动删除(ms)
     cleanTimeout: 2 * 60 * 1000,
     // base64: boolean，设置原始body是否是base64格式，默认为false，一般用于腾讯云的兼容
     base64: false,
     // 仅在匹配路径到 /api/upload 的时候去解析 body 中的文件信息
-    match: /(\/api\/upload)|(\/circle\/create)/,
+    match: /(\/api\/upload)|(\/circle)/,
   },
 } as MidwayConfig;

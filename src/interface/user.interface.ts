@@ -35,3 +35,10 @@ export interface IUserInfo {
   circlesCount: number;
   createAt: Date;
 }
+
+export interface IUserSinpleInfo{
+  uid:string;
+  name:string;
+  avatarUrl:string;
+  bio:string;
+}

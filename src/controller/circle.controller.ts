@@ -4,13 +4,14 @@ import {
   Get,
   // Query,
   Post,
-  // File,
+  Files,
+  Fields,
   Param,
-  Body,
+  Query,
 } from '@midwayjs/core';
 import { CircleService } from '../service/circle.service';
 import { Context } from '@midwayjs/koa';
-import { ICreateCircleOptions } from '../interface/circle.interface';
+// import { ICreateCircleOptions } from '../interface/circle.interface';
 
 @Controller('/circles')
 export class CircleController {
@@ -21,31 +22,42 @@ export class CircleController {
   circleService: CircleService;
 
   @Post('/')
-  async createCircle(
-    @Body() { cname, cdesc, ccreator_id, cicon }: ICreateCircleOptions
-  ) {
-    if (!cname || !cdesc || !ccreator_id) {
-      return {
-        status: 'failed',
-        msg: "You didn't put a cname Or cdesc Or ccreator_id",
-      };
-    }
+  async createCircle(@Files() iconImgs: any, @Fields() fileds) {
     try {
-      const circleInfo = await this.circleService.createCircle({
-        cname,
-        cdesc,
-        cicon,
-        ccreator_id,
-      });
+      this.ctx.logger.info('iconImgs & fileds', iconImgs, fileds);
+
+      let { cname, cdesc, ccreator_id, cicon } = fileds;
+      if (!cname || !cdesc || !ccreator_id) {
+        return {
+          status: 'failed',
+          msg: "You didn't put a cname Or cdesc Or ccreator_id",
+        };
+      }
+      let iconImg = iconImgs[0];
+      const circleInfo = await this.circleService.createCircle(
+        {
+          cname,
+          cdesc,
+          cicon,
+          ccreator_id,
+        },
+        iconImg
+      );
+      if (!circleInfo) {
+        return {
+          status: 'failed',
+          msg: '创建圈子失败',
+        };
+      }
       return {
         status: 'success',
-        msg: 'OK',
+        msg: '创建圈子成功',
         data: {
           circle: circleInfo,
         },
       };
     } catch (e) {
-      console.log(e);
+      this.ctx.logger.error(e);
       return {
         status: 'failed',
         msg: 'Sorry, some error happened when creating the circle',
@@ -53,11 +65,12 @@ export class CircleController {
     }
   }
 
-  @Get('info/:cid')
-  async getCircleInfo(@Param('cid') cid: string) {
+  @Get('/')
+  async getCircleInfo(@Query('cid') cid: string, @Query('uid') uid?: string) {
     try {
-      const circleInfo = await this.circleService.getCircleInfo(cid);
-      if (!circleInfo) {
+      const circleWithJoinedInfo =
+        await this.circleService.getCircleWithJoinedInfo(cid, uid);
+      if (!circleWithJoinedInfo) {
         return {
           status: 'failed',
           msg: 'Sorry, the circle does not exist',
@@ -66,9 +79,7 @@ export class CircleController {
       return {
         status: 'success',
         msg: '成功获取圈子信息',
-        data: {
-          circle: circleInfo,
-        },
+        data: circleWithJoinedInfo,
       };
     } catch (e) {
       this.ctx.logger.error(e);
@@ -82,10 +93,11 @@ export class CircleController {
   @Get('/:uid/recommendation')
   async getRecommendedCircles(@Param('uid') uid: string) {
     try {
-      const circles = await this.circleService.getLimitedRecommendedCirclesInfo(
-        uid
-      );
-      if (!circles) {
+      const circlesWithJoinedInfo =
+        await this.circleService.getLimitedRecommendedCirclesWithJoinedInfo(
+          uid
+        );
+      if (!circlesWithJoinedInfo) {
         return {
           status: 'failed',
           msg: 'Sorry, some error happened when getting the recommended circles',
@@ -94,9 +106,7 @@ export class CircleController {
       return {
         status: 'success',
         msg: '成功获取推荐圈子',
-        data: {
-          circles,
-        },
+        data: { circleList: circlesWithJoinedInfo },
       };
     } catch (e) {
       console.log(e);
@@ -110,8 +120,9 @@ export class CircleController {
   @Get('/:uid/mine')
   async getUserCircles(@Param('uid') uid: string) {
     try {
-      const circles = await this.circleService.getLimitedUserCirclesInfo(uid);
-      if (!circles) {
+      const circlesWithJoinedInfo =
+        await this.circleService.getLimitedUserCirclesWithJoinedInfo(uid);
+      if (!circlesWithJoinedInfo) {
         return {
           status: 'failed',
           msg: 'Sorry, some error happened when getting your circles',
@@ -120,9 +131,7 @@ export class CircleController {
       return {
         status: 'success',
         msg: '成功获取个人圈子信息',
-        data: {
-          circles,
-        },
+        data: { circleList: circlesWithJoinedInfo },
       };
     } catch (e) {
       console.log(e);

@@ -3,13 +3,15 @@ import {
   Controller,
   Get,
   Post,
+  // File,
   Files,
   Fields,
   // Query,
   Body,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-
+import * as fs from 'fs';
+import * as path from 'path';
 const imgDir = 'public/img';
 
 @Controller('/api')
@@ -46,10 +48,46 @@ export class APIController {
       // ...file 下支持同时上传多个文件
     ]
     */
+    console.log(files, fields);
+    const file = files[0];
+    const uploadPath = path.join(
+      __dirname,
+      '..',
+      '..',
+      'public',
+      'trail',
+      file.filename
+    );
+
+    // 将文件保存到服务器
+    const reader = fs.createReadStream(file.data);
+    const stream = fs.createWriteStream(uploadPath);
+    reader.pipe(stream);
     return {
       status: 'success',
       msg: 'OK',
-      data: { files, fields },
+      data: { files, fields, uploadPath },
+    };
+  }
+
+  @Post('/trail/upload')
+  async uploadTmp(@Files() files, @Fields() fields) {
+    const file = files[0];
+    console.log(file);
+    const uploadPath = path.join(
+      __dirname,
+      '../../public/trail',
+      file.filename
+    );
+
+    // 将文件保存到服务器
+    const reader = fs.createReadStream(file.filepath);
+    const stream = fs.createWriteStream(uploadPath);
+    reader.pipe(stream);
+    return {
+      status: 'success',
+      msg: 'OK',
+      data: { file, uploadPath },
     };
   }
 }

@@ -10,6 +10,7 @@ import {
 } from '../interface/user.interface';
 import { Context } from '@midwayjs/koa';
 import { assert } from 'console';
+import { CircleMember } from '../entity/circleMember.entity';
 
 @Provide()
 export class UserService {
@@ -18,6 +19,9 @@ export class UserService {
 
   @InjectEntityModel(User)
   userModel: ReturnModelType<typeof User>;
+
+  @InjectEntityModel(CircleMember)
+  circleMemberModel: ReturnModelType<typeof CircleMember>;
 
   async createUser({
     email,
@@ -48,13 +52,26 @@ export class UserService {
     }
     return user.getUserInfo();
   }
-  async getUsersInfo(uids: string[]): Promise<UserInfo[]> {
+  async getUsersInfo(uids: string[]): Promise<UserInfo[] | null> {
     try {
+      if (uids.length === 0) {
+        return [];
+      }
       const users = await this.userModel.find({ uid: { $in: uids } }).exec();
       return users.map((user: User) => user.getUserInfo());
     } catch (e) {
       this.ctx.logger.error(e);
-      return [];
+      return null;
+    }
+  }
+  async getUsersInfoByCid(cid: string): Promise<UserInfo[] | null> {
+    try {
+      let members = await this.circleMemberModel.find({ cid }).limit(10).exec();
+      let uids = members.map((member: CircleMember) => member.uid);
+      return await this.getUsersInfo(uids);
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return null;
     }
   }
   async checkPassword({

@@ -1,4 +1,18 @@
-import { ICircleInfo } from '../interface/circle.interface';
+import {
+  ICircleInfo,
+  ICircleWithJoinedInfo,
+} from '../interface/circle.interface';
+
+import { ciconPath } from '../static/mPath';
+
+export class CircleWithJoinedInfo implements ICircleWithJoinedInfo {
+  circle: ICircleInfo;
+  isJoined: boolean;
+  constructor({circle ,isJoined}:ICircleWithJoinedInfo) {
+    this.circle = circle;
+    this.isJoined = isJoined;
+  }
+}
 
 export class CircleInfo implements ICircleInfo {
   cid: string;
@@ -10,21 +24,13 @@ export class CircleInfo implements ICircleInfo {
   cmembers: number;
   cpopularity: number;
   constructor(options: ICircleInfo) {
-    let {
-      cid,
-      cname,
-      cdesc,
-      ctime,
-      cicon,
-      cposts,
-      cmembers,
-      cpopularity,
-    } = options;
+    let { cid, cname, cdesc, ctime, cicon, cposts, cmembers, cpopularity } =
+      options;
     this.cid = cid;
     this.cname = cname;
     this.cdesc = cdesc;
     this.ctime = ctime;
-    this.cicon = `/public/circle/${cicon}`; // 添加统一的相对路径
+    this.cicon = [...ciconPath, cicon].join('/');
     this.cposts = cposts;
     this.cmembers = cmembers;
     this.cpopularity = cpopularity;

@@ -6,7 +6,7 @@ import {
   // index,
 } from '@typegoose/typegoose';
 import { mDecode } from '../utils/id';
-import { UserInfo } from '../model/user.model';
+import { UserInfo, UserSingpleInfo } from '../model/user.model';
 import { PosterInfo } from '../model/post.model';
 import { CommenterInfo } from '../model/comment.model';
 // import { CircleMember } from './circleMember.entity';
@@ -16,7 +16,7 @@ import { CommenterInfo } from '../model/comment.model';
 
 @modelOptions({
   schemaOptions: {
-    collection: 'Users'
+    collection: 'Users',
   }, // 设置集合名称
 })
 // @pre<User>('findOneAndDelete', async function (next) {
@@ -79,6 +79,14 @@ export class User {
       uid: this.uid,
       name: this.name,
       avatarUrl: this.avatarUrl,
+    });
+  }
+  public getSimplInfo(): UserSingpleInfo {
+    return new UserSingpleInfo({
+      uid: this.uid,
+      name: this.name,
+      avatarUrl: this.avatarUrl,
+      bio: this.bio,
     });
   }
 }

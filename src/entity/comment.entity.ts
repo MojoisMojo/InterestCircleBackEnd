@@ -6,7 +6,7 @@ import { CommentInfo } from '../model/comment.model';
 @modelOptions({
   schemaOptions: { collection: 'Comments' }, // 设置集合名称
 })
-export class Comment implements IComment {
+export class Mcomment implements IComment {
   @prop({ required: true, unique: true })
   public comid: string;
 
