@@ -6,6 +6,7 @@ import {
 } from '@typegoose/typegoose';
 // import { CircleMember } from './circleMember.entity';
 import { CircleInfo, CircleWithJoinedInfo } from '../model/circle.model';
+import { ICircleInfo } from '../interface/circle.interface';
 
 // 获取 CircleMember 模型
 // const CircleMemberModel = getModelForClass(CircleMember);
@@ -45,11 +46,12 @@ export class Circle {
   @prop({ default: 0 })
   public cpopularity: number;
 
-  public getCircleInfo(): CircleInfo {
+  public getCircleInfo(): ICircleInfo {
     return new CircleInfo({
       cid: this.cid,
       cname: this.cname,
       cdesc: this.cdesc,
+      ccreator_id: this.ccreator_id,
       cicon: this.cicon,
       ctime: this.ctime,
       cposts: this.cposts,

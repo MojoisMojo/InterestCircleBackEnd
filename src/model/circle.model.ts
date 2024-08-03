@@ -1,6 +1,7 @@
 import {
   ICircleInfo,
   ICircleWithJoinedInfo,
+  ICircle,
 } from '../interface/circle.interface';
 
 import { ciconPath } from '../static/mPath';
@@ -8,7 +9,7 @@ import { ciconPath } from '../static/mPath';
 export class CircleWithJoinedInfo implements ICircleWithJoinedInfo {
   circle: ICircleInfo;
   isJoined: boolean;
-  constructor({circle ,isJoined}:ICircleWithJoinedInfo) {
+  constructor({ circle, isJoined }: ICircleWithJoinedInfo) {
     this.circle = circle;
     this.isJoined = isJoined;
   }
@@ -23,7 +24,7 @@ export class CircleInfo implements ICircleInfo {
   cposts: number;
   cmembers: number;
   cpopularity: number;
-  constructor(options: ICircleInfo) {
+  constructor(options: ICircle) {
     let { cid, cname, cdesc, ctime, cicon, cposts, cmembers, cpopularity } =
       options;
     this.cid = cid;

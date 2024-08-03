@@ -3,7 +3,7 @@ import { Context } from '@midwayjs/koa';
 import { InjectEntityModel } from '@midwayjs/typegoose';
 import { ReturnModelType } from '@typegoose/typegoose';
 import { Circle } from '../entity/circle.entity';
-import { ICreateCircleOptions } from '../interface/circle.interface';
+import { ICircle, ICreateCircleOptions } from '../interface/circle.interface';
 import { CircleInfo, CircleWithJoinedInfo } from '../model/circle.model';
 import { mGenerateRandomId } from '../utils/id';
 import { CircleMember } from '../entity/circleMember.entity';
@@ -102,7 +102,7 @@ export class CircleService {
       const isJoined = uid
         ? !!(await this.circleMemberModel.exists({ cid, uid }))
         : false;
-      return { circle: circleInfo, isJoined } as CircleWithJoinedInfo;
+      return { circle: {...circleInfo}, isJoined } as CircleWithJoinedInfo;
     } catch (e) {
       this.ctx.logger.error(e);
       return null;
@@ -151,7 +151,7 @@ export class CircleService {
     limit: number = 50
   ): Promise<CircleWithJoinedInfo[] | null> {
     try {
-      const recommendedCircles = await this.circleModel
+      const recommendedCircles: ICircle[] = await this.circleModel
         .aggregate([{ $sample: { size: limit } }])
         .exec();
       if (!recommendedCircles) {
@@ -166,7 +166,10 @@ export class CircleService {
             cid: circle.cid,
             uid,
           });
-          return circle.getCircleInfo(exists);
+          return new CircleWithJoinedInfo({
+            circle: new CircleInfo(circle),
+            isJoined: !!exists,
+          });
         })
       );
       return circleWithJoinedInfos;

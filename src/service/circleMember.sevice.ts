@@ -19,7 +19,13 @@ export class CircleMemberService {
 
   @InjectEntityModel(User)
   userModel: ReturnModelType<typeof User>;
-  async createCircleMember(cid: string, uid: string): Promise<boolean> {
+  async createCircleMember({
+    cid,
+    uid,
+  }: {
+    cid: string;
+    uid: string;
+  }): Promise<boolean> {
     try {
       let circleMember = await this.circleMemberModel
         .findOne({ cid, uid })
@@ -28,8 +34,8 @@ export class CircleMemberService {
         return false;
       }
       // Find the circle and user
-      const circle = await this.circleModel.findOne({cid}).exec();
-      const user = await this.userModel.findOne({uid}).exec();
+      const circle = await this.circleModel.findOne({ cid }).exec();
+      const user = await this.userModel.findOne({ uid }).exec();
 
       if (!circle || !user) {
         return false;
@@ -37,7 +43,7 @@ export class CircleMemberService {
       // 创建一个新的 circleMember
       let newCircleMember = await this.circleMemberModel.create({
         cid: cid,
-        uid: uid
+        uid: uid,
       } as CircleMember);
       if (!newCircleMember) {
         return false;
@@ -53,7 +59,13 @@ export class CircleMemberService {
       return false;
     }
   }
-  async deleteCircleMember(cid: string, uid: string): Promise<boolean> {
+  async deleteCircleMember({
+    cid,
+    uid,
+  }: {
+    cid: string;
+    uid: string;
+  }): Promise<boolean> {
     try {
       let circleMember = await this.circleMemberModel
         .findOne({ cid, uid })
@@ -62,8 +74,8 @@ export class CircleMemberService {
         return false;
       }
       // Find the circle and user
-      const circle = await this.circleModel.findOne({cid}).exec();
-      const user = await this.userModel.findOne({uid}).exec();
+      const circle = await this.circleModel.findOne({ cid }).exec();
+      const user = await this.userModel.findOne({ uid }).exec();
       // 删除member, 更改 circle 的 cmembers 的数目, 和 user 的 circles 的数目
       circle.cmembers -= 1;
       user.circlesCount -= 1;

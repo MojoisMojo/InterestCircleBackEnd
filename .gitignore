@@ -9,6 +9,7 @@ run/
 
 tmpdir/
 data/
+public/
 
 .DS_Store
 

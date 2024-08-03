@@ -2,11 +2,9 @@ import {
   Inject,
   Controller,
   Get,
-  // Query,
   Post,
   Files,
   Fields,
-  Param,
   Query,
 } from '@midwayjs/core';
 import { CircleService } from '../service/circle.service';
@@ -70,6 +68,7 @@ export class CircleController {
     try {
       const circleWithJoinedInfo =
         await this.circleService.getCircleWithJoinedInfo(cid, uid);
+      console.log('circleWithJoinedInfo', circleWithJoinedInfo);
       if (!circleWithJoinedInfo) {
         return {
           status: 'failed',
@@ -90,8 +89,8 @@ export class CircleController {
     }
   }
 
-  @Get('/:uid/recommendation')
-  async getRecommendedCircles(@Param('uid') uid: string) {
+  @Get('/recommendation')
+  async getRecommendedCircles(@Query('uid') uid: string) {
     try {
       const circlesWithJoinedInfo =
         await this.circleService.getLimitedRecommendedCirclesWithJoinedInfo(
@@ -100,13 +99,13 @@ export class CircleController {
       if (!circlesWithJoinedInfo) {
         return {
           status: 'failed',
-          msg: 'Sorry, some error happened when getting the recommended circles',
+          msg: 'Sorry, we failed to get the recommended circles',
         };
       }
       return {
         status: 'success',
         msg: '成功获取推荐圈子',
-        data: { circleList: circlesWithJoinedInfo },
+        data: { circlesList: circlesWithJoinedInfo },
       };
     } catch (e) {
       console.log(e);
@@ -117,8 +116,8 @@ export class CircleController {
     }
   }
 
-  @Get('/:uid/mine')
-  async getUserCircles(@Param('uid') uid: string) {
+  @Get('/mine')
+  async getUserCircles(@Query('uid') uid: string) {
     try {
       const circlesWithJoinedInfo =
         await this.circleService.getLimitedUserCirclesWithJoinedInfo(uid);
@@ -131,7 +130,7 @@ export class CircleController {
       return {
         status: 'success',
         msg: '成功获取个人圈子信息',
-        data: { circleList: circlesWithJoinedInfo },
+        data: { circlesList: circlesWithJoinedInfo },
       };
     } catch (e) {
       console.log(e);
