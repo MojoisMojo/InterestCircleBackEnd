@@ -8,6 +8,7 @@ dist/
 run/
 
 tmpdir/
+tmp_dir/
 data/
 public/
 
