@@ -4,7 +4,7 @@ export interface IUser {
   email: string;
   bio: string;
   avatarUrl: string;
-  likesCount: number;
+  postsCount: number;
   circlesCount: number;
   createAt: Date;
   password: string;
@@ -31,14 +31,14 @@ export interface IUserInfo {
   email: string;
   bio: string;
   avatarUrl: string;
-  likesCount: number;
+  postsCount: number;
   circlesCount: number;
   createAt: Date;
 }
 
-export interface IUserSinpleInfo{
-  uid:string;
-  name:string;
-  avatarUrl:string;
-  bio:string;
+export interface IUserSinpleInfo {
+  uid: string;
+  name: string;
+  avatarUrl: string;
+  bio: string;
 }

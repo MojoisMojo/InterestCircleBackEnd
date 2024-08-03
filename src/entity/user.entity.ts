@@ -43,7 +43,7 @@ export class User {
   public avatarUrl: string;
 
   @prop({ default: 0 })
-  public likesCount: number;
+  public postsCount: number;
 
   @prop({ default: 0 })
   public circlesCount: number;
@@ -62,7 +62,7 @@ export class User {
       email: this.email,
       bio: this.bio,
       avatarUrl: this.avatarUrl,
-      likesCount: this.likesCount,
+      postsCount: this.postsCount,
       circlesCount: this.circlesCount,
       createAt: this.createAt,
     });

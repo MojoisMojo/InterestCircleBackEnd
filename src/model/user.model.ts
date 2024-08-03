@@ -9,7 +9,7 @@ export class UserInfo implements IUserInfo {
   email: string;
   bio: string;
   avatarUrl: string;
-  likesCount: number;
+  postsCount: number;
   circlesCount: number;
   createAt: Date;
 
@@ -19,7 +19,7 @@ export class UserInfo implements IUserInfo {
     email,
     bio,
     avatarUrl,
-    likesCount,
+    postsCount,
     circlesCount,
     createAt,
   }: IUserInfo) {
@@ -28,7 +28,7 @@ export class UserInfo implements IUserInfo {
     this.email = email;
     this.bio = bio;
     this.avatarUrl = userAvatarUrl(avatarUrl);
-    this.likesCount = likesCount;
+    this.postsCount = postsCount;
     this.circlesCount = circlesCount;
     this.createAt = createAt;
   }

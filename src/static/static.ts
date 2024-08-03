@@ -10,7 +10,7 @@ const static_empty_user = {
   email: '',
   bio: '',
   avatarUrl: '',
-  likesCount: 0,
+  postsCount: 0,
   circlesCount: 0,
   passWord: '',
 };
@@ -21,7 +21,7 @@ const static_mojo_user = {
   email: 'mojo@163.com',
   bio: 'gudengmingyueyingluoye',
   avatarUrl: '/logo.svg',
-  likesCount: 1345,
+  postsCount: 1345,
   circlesCount: 14,
   passWord: '15wbFdA',
 };
