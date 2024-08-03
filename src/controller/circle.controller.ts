@@ -22,7 +22,7 @@ export class CircleController {
   @Post('/')
   async createCircle(@Files() iconImgs: any, @Fields() fileds) {
     try {
-      this.ctx.logger.info('iconImgs & fileds', iconImgs, fileds);
+      // this.ctx.logger.info('iconImgs & fileds', iconImgs, fileds);
 
       let { cname, cdesc, ccreator_id, cicon } = fileds;
       if (!cname || !cdesc || !ccreator_id) {

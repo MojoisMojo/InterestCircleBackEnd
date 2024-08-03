@@ -1,6 +1,9 @@
-import { ICommentInfo, ICommenterInfo } from '../interface/comment.interface';
-import { avatarPath } from '../static/ImgPath';
-
+import {
+  ICommentInfo,
+  ICommenterInfo,
+  ICommentWithCommenterInfo,
+} from '../interface/comment.interface';
+import { userAvatarUrl as commenterAvatarUrl } from '../utils/ImgPath';
 export class CommentInfo implements ICommentInfo {
   comid: string;
   time: Date;
@@ -23,6 +26,17 @@ export class CommenterInfo implements ICommenterInfo {
     let { uid, name, avatarUrl } = options;
     this.uid = uid;
     this.name = name;
-    this.avatarUrl = [...avatarPath,avatarUrl].join('/');
+    this.avatarUrl = commenterAvatarUrl(avatarUrl);
+  }
+}
+
+export class CommentWithCommenterInfo implements ICommentWithCommenterInfo {
+  comment: ICommentInfo;
+  commenter: ICommenterInfo;
+
+  constructor(options: ICommentWithCommenterInfo) {
+    let { comment, commenter } = options;
+    this.comment = comment;
+    this.commenter = commenter;
   }
 }

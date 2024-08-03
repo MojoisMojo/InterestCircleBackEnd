@@ -23,3 +23,8 @@ export interface IComment {
   content: string;
   pid: string;
 }
+
+export interface ICommentWithCommenterInfo {
+  comment: ICommentInfo;
+  commenter: ICommenterInfo;
+}

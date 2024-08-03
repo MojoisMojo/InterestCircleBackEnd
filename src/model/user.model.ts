@@ -1,5 +1,5 @@
 import { IUserInfo, IUserSinpleInfo } from '../interface/user.interface';
-import { avatarPath } from '../static/ImgPath';
+import { avatarPath } from '../utils/ImgPath';
 const userAvatarUrl = (path: string) =>
   [...avatarPath, path ? path : 'avatar.svg'].join('/');
 

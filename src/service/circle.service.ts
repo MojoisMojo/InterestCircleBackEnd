@@ -9,7 +9,7 @@ import { mGenerateRandomId } from '../utils/id';
 import { CircleMember } from '../entity/circleMember.entity';
 import { User } from '../entity/user.entity';
 import { storeSingleImg } from '../utils/file';
-import { ciconPath } from '../static/ImgPath';
+import { ciconPath } from '../utils/ImgPath';
 import path = require('path');
 
 @Provide()

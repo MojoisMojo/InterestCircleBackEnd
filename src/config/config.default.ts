@@ -5,7 +5,20 @@ import { User } from '../entity/user.entity';
 import { Circle } from '../entity/circle.entity';
 import { CircleMember } from '../entity/circleMember.entity';
 import { Mpost } from '../entity/post.entity';
-import { Mcomment } from '../entity/comment.entity';
+import { MComment } from '../entity/comment.entity';
+
+const imageExtensions = [
+  '.jpg',
+  '.jpeg',
+  '.png',
+  '.gif',
+  '.bmp',
+  '.wbmp',
+  '.webp',
+  '.tif',
+  '.psd',
+  '.svg',
+];
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -41,7 +54,7 @@ export default {
         connectTimeoutMS: 60 * 1000,
         socketTimeoutMS: 60 * 1000,
       },
-      entities: [User, Circle, CircleMember, Mpost, Mcomment],
+      entities: [User, Circle, CircleMember, Mpost, MComment],
     },
   },
 
@@ -72,9 +85,9 @@ export default {
     // mode: UploadMode, 默认为file，即上传到服务器临时目录，可以配置为 stream
     mode: 'file',
     // fileSize: string, 最大上传文件大小
-    fileSize: '5mb',
+    fileSize: '50mb',
     // whitelist: string[]，文件扩展名白名单
-    whitelist: uploadWhiteList.filter(ext => ext !== '.pdf'),
+    whitelist: uploadWhiteList.filter(ext => imageExtensions.includes(ext)),
     // tmpdir: string，上传的文件临时存储路径
     tmpdir: join(__dirname, '../../tmp_dir/midway-upload-files'),
     // cleanTimeout: number，上传的文件在临时目录中多久之后自动删除(ms)

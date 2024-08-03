@@ -6,4 +6,7 @@ const postImgPath = (time: Date) => [
   time.toISOString().slice(0, 10).replace(/-/g, ''),
 ];
 
-export { ciconPath, avatarPath, postImgPath };
+const userAvatarUrl = (path: string) =>
+  [...avatarPath, path ? path : 'avatar.svg'].join('/');
+
+export { ciconPath, avatarPath, postImgPath, userAvatarUrl };

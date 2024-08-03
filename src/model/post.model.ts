@@ -3,7 +3,10 @@ import {
   IPostInfo,
   IPostContentInfo,
 } from '../interface/post.interface';
-import { avatarPath, postImgPath } from '../static/ImgPath';
+import {
+  postImgPath,
+  userAvatarUrl as posterAvatarUrl,
+} from '../utils/ImgPath';
 
 export class PosterInfo implements IPosterInfo {
   uid: string;
@@ -12,7 +15,7 @@ export class PosterInfo implements IPosterInfo {
   constructor({ uid, name, avatarUrl }: IPosterInfo) {
     this.uid = uid;
     this.name = name;
-    this.avatarUrl = [...avatarPath, avatarUrl].join('/');
+    this.avatarUrl = posterAvatarUrl(avatarUrl);
   }
 }
 
@@ -47,10 +50,10 @@ export class PostContentInfo implements IPostContentInfo {
 }
 
 export class PostInfo implements IPostInfo {
-  posterInfo: IPosterInfo;
-  postContent: IPostContentInfo;
-  constructor({ postContent, posterInfo }: IPostInfo) {
-    this.postContent = postContent;
-    this.posterInfo = posterInfo;
+  poster: IPosterInfo;
+  post: IPostContentInfo;
+  constructor({ post, poster }: IPostInfo) {
+    this.post = post;
+    this.poster = poster;
   }
 }

@@ -27,8 +27,8 @@ export interface IPostContentInfo {
 }
 
 export interface IPostInfo {
-  posterInfo: IPosterInfo;
-  postContent: IPostContentInfo;
+  poster: IPosterInfo;
+  post: IPostContentInfo;
 }
 
 export interface IMpost {

@@ -6,6 +6,8 @@ import {
   Files,
   Fields,
   Query,
+  Put,
+  // Param,
 } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { PostService } from '../service/post.service';
@@ -21,10 +23,10 @@ export class PostController {
   @Post('/')
   async createPost(@Files() imgFiles: any, @Fields() fileds: any) {
     try {
-      this.ctx.logger.info('imgFiles & fileds', imgFiles, fileds);
+      // this.ctx.logger.info('imgFiles & fileds', imgFiles, fileds);
 
       let { uid, cid, content } = fileds;
-      this.ctx.logger.info('uid & cid & conten', uid, cid, content);
+      this.ctx.logger.info('uid & cid', uid, cid);
       if (!uid || !cid || !content) {
         return {
           status: 'failed',
@@ -60,7 +62,7 @@ export class PostController {
   }
 
   @Get('/')
-  async getPostsInfoByCid(@Query() cid: string) {
+  async getPostsInfoByCid(@Query('cid') cid: string) {
     try {
       console.log('getPostsInfoByCid: cid', cid);
       const postsInfo = await this.postService.getLimitedPostsInfoByCid(cid);
@@ -74,7 +76,7 @@ export class PostController {
         status: 'success',
         msg: '获取动态成功',
         data: {
-          postsList: postsInfo,
+          posts: postsInfo,
         },
       };
     } catch (e) {
@@ -82,6 +84,37 @@ export class PostController {
       return {
         status: 'failed',
         msg: '抱歉，获取动态时发生了一些错误',
+      };
+    }
+  }
+
+  @Put('/like')
+  async likesAct(
+    @Query('pid') pid: string,
+    @Query('uid') uid: string,
+    @Query('type') type?: string // TODO: 接口类型，点赞或取消点赞
+  ) {
+    try {
+      console.log('likesAct: pid & uid', pid, uid);
+      const postInfo = await this.postService.likePostAct(pid, uid);
+      if (!postInfo) {
+        return {
+          status: 'failed',
+          msg: '点赞失败',
+        };
+      }
+      return {
+        status: 'success',
+        msg: '点赞成功',
+        data: {
+          type: type || 'like',
+        },
+      };
+    } catch (e) {
+      this.ctx.logger.error('in post.controller, when likesAct', e);
+      return {
+        status: 'failed',
+        msg: '抱歉，点赞时发生了一些错误',
       };
     }
   }

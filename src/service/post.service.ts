@@ -14,7 +14,7 @@ import { Circle } from '../entity/circle.entity';
 import { CircleMember } from '../entity/circleMember.entity';
 import { mGenerateRandomId } from '../utils/id';
 import { storeMultipleImgs } from '../utils/file';
-import { postImgPath } from '../static/ImgPath';
+import { postImgPath } from '../utils/ImgPath';
 import path = require('path');
 
 @Provide()
@@ -35,7 +35,7 @@ export class PostService {
   circleMemberModel: ReturnModelType<typeof CircleMember>;
 
   async createPost(
-    options: ICreatePostOptions,
+    options: ICreatePostOptions
   ): Promise<IPostContentInfo | null> {
     try {
       let { uid, cid, content, imgFiles } = options;
@@ -67,6 +67,9 @@ export class PostService {
       // 增加贴子数
       circle.cposts += 1;
       user.postsCount += 1;
+
+      circle.save();
+      user.save();
 
       storeMultipleImgs(path.join(...postImgPath(time)), postsImgName, imgFiles)
         .then(res => {
@@ -113,21 +116,21 @@ export class PostService {
         return [];
       }
       let postsInfo = await Promise.all(
-        posts.map(async (post:any) => {
+        posts.map(async (post: any) => {
           try {
             let user = await this.userModel.findOne({ uid: post.uid }).exec();
             if (!user) {
               throw new Error('can not find poster Info');
             }
             return new PostInfo({
-              posterInfo: user.getInfoAsPoster(),
-              postContent: post.getPostContentInfo(),
+              poster: user.getInfoAsPoster(),
+              post: post.getPostContentInfo(),
             });
           } catch (e) {
             this.ctx.logger.error('when finding PosterInfo', e);
             return new PostInfo({
-              posterInfo: null,
-              postContent: post.getPostContentInfo(),
+              poster: null,
+              post: post.getPostContentInfo(),
             });
           } finally {
             // 增加浏览量
@@ -151,7 +154,7 @@ export class PostService {
   }
 
   // TODO: 添加关系到数据库中
-  async addPostLikes(pid: string, uid: string): Promise<boolean> {
+  async likePostAct(pid: string, uid: string, type?: string): Promise<boolean> {
     try {
       let post = await this.postModel.findOne({ pid }).exec();
       if (!post) {
