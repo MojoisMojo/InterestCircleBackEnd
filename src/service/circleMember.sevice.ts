@@ -19,6 +19,21 @@ export class CircleMemberService {
 
   @InjectEntityModel(User)
   userModel: ReturnModelType<typeof User>;
+
+  async isCircleMember({
+    cid,
+    uid,
+  }: {
+    cid: string;
+    uid: string;
+  }): Promise<boolean> {
+    try {
+      return !!(await this.circleMemberModel.exists({ cid, uid }));
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return false;
+    }
+  }
   async createCircleMember({
     cid,
     uid,
@@ -34,8 +49,8 @@ export class CircleMemberService {
         return false;
       }
       // Find the circle and user
-      const circle = await this.circleModel.findOne({ cid }).exec();
-      const user = await this.userModel.findOne({ uid }).exec();
+      let circle = await this.circleModel.findOne({ cid }).exec();
+      let user = await this.userModel.findOne({ uid }).exec();
 
       if (!circle || !user) {
         return false;
@@ -51,8 +66,12 @@ export class CircleMemberService {
       // 更改 circle 的 cmembers 的数目, 和 user 的 circles 的数目
       circle.cmembers += 1;
       user.circlesCount += 1;
-      await Promise.all([circle.save, user.save]);
-      // 如果Promise 失败 fuck
+
+      circle.save();
+      user.save();
+
+      // 如果失败 fuck
+
       return true;
     } catch (e) {
       this.ctx.logger.error(e);
@@ -73,13 +92,22 @@ export class CircleMemberService {
       if (!circleMember) {
         return false;
       }
+      // delete member doc
+      let deleteRes = await circleMember.deleteOne();
+      console.log(deleteRes);
       // Find the circle and user
-      const circle = await this.circleModel.findOne({ cid }).exec();
-      const user = await this.userModel.findOne({ uid }).exec();
+      let circle = await this.circleModel.findOne({ cid }).exec();
+      let user = await this.userModel.findOne({ uid }).exec();
+      if (!circle || !user) {
+        return false;
+      }
       // 删除member, 更改 circle 的 cmembers 的数目, 和 user 的 circles 的数目
       circle.cmembers -= 1;
       user.circlesCount -= 1;
-      await Promise.all([circle.save, user.save, circleMember.deleteOne]);
+
+      circle.save();
+      user.save();
+
       return true;
     } catch (e) {
       this.ctx.logger.error(e);

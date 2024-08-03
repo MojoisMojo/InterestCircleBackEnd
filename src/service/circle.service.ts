@@ -151,6 +151,7 @@ export class CircleService {
     limit: number = 50
   ): Promise<CircleWithJoinedInfo[] | null> {
     try {
+      console.log('getLimitedRecommendedCirclesWithJoinedInfo: uid', uid, ".");
       const recommendedCircles: ICircle[] = await this.circleModel
         .aggregate([{ $sample: { size: limit } }])
         .exec();

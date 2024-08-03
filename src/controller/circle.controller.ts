@@ -94,7 +94,7 @@ export class CircleController {
     try {
       const circlesWithJoinedInfo =
         await this.circleService.getLimitedRecommendedCirclesWithJoinedInfo(
-          uid
+          uid,
         );
       if (!circlesWithJoinedInfo) {
         return {
