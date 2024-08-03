@@ -20,7 +20,7 @@ export class UserController {
 
   @Post('/login')
   async login(@Body() body: { email: string; password: string }) {
-    console.log(body);
+    // console.log(body);
     let { email, password } = body;
     if(!email || !password){
       return {

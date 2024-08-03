@@ -68,7 +68,7 @@ export class CircleController {
     try {
       const circleWithJoinedInfo =
         await this.circleService.getCircleWithJoinedInfo(cid, uid);
-      console.log('circleWithJoinedInfo', circleWithJoinedInfo);
+      // console.log('circleWithJoinedInfo', circleWithJoinedInfo);
       if (!circleWithJoinedInfo) {
         return {
           status: 'failed',
@@ -108,7 +108,7 @@ export class CircleController {
         data: { circlesList: circlesWithJoinedInfo },
       };
     } catch (e) {
-      console.log(e);
+      this.ctx.logger.error(e);
       return {
         status: 'failed',
         msg: 'Sorry, some error happened when getting the recommended circles',
@@ -124,7 +124,7 @@ export class CircleController {
       if (!circlesWithJoinedInfo) {
         return {
           status: 'failed',
-          msg: 'Sorry, some error happened when getting your circles',
+          msg: '抱歉，获取您的圈子时发生了一些错误',
         };
       }
       return {
@@ -133,7 +133,7 @@ export class CircleController {
         data: { circlesList: circlesWithJoinedInfo },
       };
     } catch (e) {
-      console.log(e);
+      this.ctx.logger.error(e);
       return {
         status: 'failed',
         msg: 'Sorry, some error happened when getting your circles',

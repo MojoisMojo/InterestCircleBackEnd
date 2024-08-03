@@ -41,6 +41,7 @@ async function storeMultipleImgs(
       imgName = imgNames[i];
     await storeSingleImg(targetRelativeDir, imgName, img);
   }
+  return true;
 }
 
 export { storeSingleImg, storeMultipleImgs };

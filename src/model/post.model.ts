@@ -49,10 +49,8 @@ export class PostContentInfo implements IPostContentInfo {
 export class PostInfo implements IPostInfo {
   posterInfo: IPosterInfo;
   postContent: IPostContentInfo;
-  isLiked: boolean;
-  constructor({ postContent, posterInfo, isLiked }: IPostInfo) {
+  constructor({ postContent, posterInfo }: IPostInfo) {
     this.postContent = postContent;
     this.posterInfo = posterInfo;
-    this.isLiked = isLiked;
   }
 }

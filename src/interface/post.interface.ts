@@ -2,6 +2,7 @@ export interface ICreatePostOptions {
   uid: string;
   cid: string;
   content: string;
+  imgFiles?: any[];
   imgs?: string[];
 }
 
@@ -28,7 +29,6 @@ export interface IPostContentInfo {
 export interface IPostInfo {
   posterInfo: IPosterInfo;
   postContent: IPostContentInfo;
-  isLiked: boolean;
 }
 
 export interface IMpost {

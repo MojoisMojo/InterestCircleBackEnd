@@ -64,7 +64,7 @@ export class CircleService {
       // 储存图片
       storeSingleImg(path.join(...ciconPath), ciconName, imgFile)
         .then(res => {
-          console.log('Store circle Img Success');
+          this.ctx.logger.info('Store circle Img Success');
         })
         .catch(e => {
           this.ctx.logger.warn('Error When Storing circle Img', e);
@@ -76,18 +76,18 @@ export class CircleService {
     }
   }
 
-  async storeCircleIcon(file: any, cicon: string): Promise<string | null> {
-    try {
-      let t = cicon.split('.');
-      let typeString = t[t.length - 1];
-      let ciconName = `${mGenerateRandomId(16)}.${typeString}`;
-      await file.move(`public/circleIcon/${ciconName}`);
-      return ciconName;
-    } catch (e) {
-      this.ctx.logger.error(e);
-      return null;
-    }
-  }
+  // async storeCircleIcon(file: any, cicon: string): Promise<string | null> {
+  //   try {
+  //     let t = cicon.split('.');
+  //     let typeString = t[t.length - 1];
+  //     let ciconName = `${mGenerateRandomId(16)}.${typeString}`;
+  //     await file.move(`public/circleIcon/${ciconName}`);
+  //     return ciconName;
+  //   } catch (e) {
+  //     this.ctx.logger.error(e);
+  //     return null;
+  //   }
+  // }
 
   async getCircleWithJoinedInfo(
     cid: string,

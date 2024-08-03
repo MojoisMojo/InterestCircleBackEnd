@@ -46,7 +46,7 @@ export class CircleMemberService {
       const members = await this.circleMemberModel
         .find({ uid, cid: { $in: cids } })
         .exec();
-      const inCids = (members as any[]).map(member => (member.cid));
+      const inCids = (members as any[]).map(member => member.cid);
       const res = await Promise.all(
         cids.map(async cid => ({
           [cid]: inCids.includes(cid),
@@ -91,6 +91,7 @@ export class CircleMemberService {
       circle.cmembers += 1;
       user.circlesCount += 1;
 
+      // await Promise.all([circle.save(), user.save()]);
       circle.save();
       user.save();
 
@@ -117,8 +118,9 @@ export class CircleMemberService {
         return false;
       }
       // delete member doc
-      let deleteRes = await circleMember.deleteOne();
-      console.log(deleteRes);
+      // let deleteRes =
+      await circleMember.deleteOne();
+      // console.log(deleteRes);
       // Find the circle and user
       let circle = await this.circleModel.findOne({ cid }).exec();
       let user = await this.userModel.findOne({ uid }).exec();
