@@ -3,6 +3,7 @@ import {
   IPostInfo,
   IPostContentInfo,
 } from '../interface/post.interface';
+import { avatarPath, postImgPath } from '../static/ImgPath';
 
 export class PosterInfo implements IPosterInfo {
   uid: string;
@@ -11,7 +12,7 @@ export class PosterInfo implements IPosterInfo {
   constructor({ uid, name, avatarUrl }: IPosterInfo) {
     this.uid = uid;
     this.name = name;
-    this.avatarUrl = avatarUrl;
+    this.avatarUrl = [...avatarPath, avatarUrl].join('/');
   }
 }
 
@@ -37,7 +38,7 @@ export class PostContentInfo implements IPostContentInfo {
     this.pid = pid;
     this.time = time;
     this.content = content;
-    this.imgs = imgs;
+    this.imgs = imgs.map(img => [...postImgPath(time), img].join('/'));
     this.likes = likes;
     this.looks = looks;
     this.comments = comments;

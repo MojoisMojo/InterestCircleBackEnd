@@ -9,7 +9,7 @@ import { mGenerateRandomId } from '../utils/id';
 import { CircleMember } from '../entity/circleMember.entity';
 import { User } from '../entity/user.entity';
 import { storeSingleImg } from '../utils/file';
-import { ciconPath } from '../static/mPath';
+import { ciconPath } from '../static/ImgPath';
 import path = require('path');
 
 @Provide()
@@ -102,7 +102,7 @@ export class CircleService {
       const isJoined = uid
         ? !!(await this.circleMemberModel.exists({ cid, uid }))
         : false;
-      return { circle: {...circleInfo}, isJoined } as CircleWithJoinedInfo;
+      return { circle: { ...circleInfo }, isJoined } as CircleWithJoinedInfo;
     } catch (e) {
       this.ctx.logger.error(e);
       return null;
@@ -151,7 +151,7 @@ export class CircleService {
     limit: number = 50
   ): Promise<CircleWithJoinedInfo[] | null> {
     try {
-      console.log('getLimitedRecommendedCirclesWithJoinedInfo: uid', uid, ".");
+      console.log('getLimitedRecommendedCirclesWithJoinedInfo: uid', uid, '.');
       const recommendedCircles: ICircle[] = await this.circleModel
         .aggregate([{ $sample: { size: limit } }])
         .exec();

@@ -34,6 +34,30 @@ export class CircleMemberService {
       return false;
     }
   }
+  // 形如 {[cid]: boolean}
+  async isCirclesMember({
+    cids,
+    uid,
+  }: {
+    cids: string[];
+    uid: string;
+  }): Promise<object | null> {
+    try {
+      const members = await this.circleMemberModel
+        .find({ uid, cid: { $in: cids } })
+        .exec();
+      const inCids = (members as any[]).map(member => (member.cid));
+      const res = await Promise.all(
+        cids.map(async cid => ({
+          [cid]: inCids.includes(cid),
+        }))
+      );
+      return Object.assign({}, ...res);
+    } catch (e) {
+      this.ctx.logger.error(e);
+      return null;
+    }
+  }
   async createCircleMember({
     cid,
     uid,

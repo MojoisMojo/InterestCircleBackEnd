@@ -4,7 +4,7 @@ import {
   ICircle,
 } from '../interface/circle.interface';
 
-import { ciconPath } from '../static/mPath';
+import { ciconPath } from '../static/ImgPath';
 
 export class CircleWithJoinedInfo implements ICircleWithJoinedInfo {
   circle: ICircleInfo;

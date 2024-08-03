@@ -1,4 +1,5 @@
 import { ICommentInfo, ICommenterInfo } from '../interface/comment.interface';
+import { avatarPath } from '../static/ImgPath';
 
 export class CommentInfo implements ICommentInfo {
   comid: string;
@@ -22,6 +23,6 @@ export class CommenterInfo implements ICommenterInfo {
     let { uid, name, avatarUrl } = options;
     this.uid = uid;
     this.name = name;
-    this.avatarUrl = avatarUrl;
+    this.avatarUrl = [...avatarPath,avatarUrl].join('/');
   }
 }

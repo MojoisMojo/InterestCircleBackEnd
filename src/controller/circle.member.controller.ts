@@ -12,7 +12,7 @@ import {
   // Param,
   // Query,
 } from '@midwayjs/core';
-import { CircleMemberService } from '../service/circleMember.sevice';
+import { CircleMemberService } from '../service/circle.member.sevice';
 import { Context } from '@midwayjs/koa';
 
 @Controller('/circlemembers')
@@ -23,7 +23,7 @@ export class CircleMemberController {
   circleMemberService: CircleMemberService;
 
   @Get('/')
-  async isMember(@Queries() options: { uid: string; cid: string }) {
+  async isCircleMember(@Queries() options: { uid: string; cid: string }) {
     let { uid, cid } = options;
     if (!uid || !cid) {
       return {
@@ -37,6 +37,31 @@ export class CircleMemberController {
       status: 'success',
       msg: '查询成功',
       data: { isMember: isMember },
+    };
+  }
+
+  @Get('/members')
+  async isCirclesMembers(@Queries() options: { uid: string; cids: string[] }) {
+    let { uid, cids } = options;
+    if (!uid || !cids || cids.length === 0) {
+      return {
+        status: 'failed',
+        msg: '未收到用户id或圈子id',
+        data: options,
+      };
+    }
+    let res = await this.circleMemberService.isCirclesMember({ uid, cids });
+    if (!res) {
+      return {
+        status: 'failed',
+        msg: '服务查询失败',
+        data: options,
+      };
+    }
+    return {
+      status: 'success',
+      msg: '查询成功',
+      data: { isJoined: res },
     };
   }
 
