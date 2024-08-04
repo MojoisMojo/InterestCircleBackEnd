@@ -64,7 +64,7 @@ export class PostController {
   @Get('/')
   async getPostsInfoByCid(@Query('cid') cid: string) {
     try {
-      console.log('getPostsInfoByCid: cid', cid);
+      // console.log('getPostsInfoByCid: cid', cid);
       const postsInfo = await this.postService.getLimitedPostsInfoByCid(cid);
       if (!postsInfo) {
         return {
@@ -95,7 +95,7 @@ export class PostController {
     @Query('type') type?: string // TODO: 接口类型，点赞或取消点赞
   ) {
     try {
-      console.log('likesAct: pid & uid', pid, uid);
+      // console.log('likesAct: pid & uid', pid, uid);
       const postInfo = await this.postService.likePostAct(pid, uid);
       if (!postInfo) {
         return {

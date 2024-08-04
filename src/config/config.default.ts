@@ -31,13 +31,6 @@ export default {
   webSocket: {},
 
   cors: {
-    // origin: '/^(http://192.168.d{1,3}.d{1,3}(:d+)?|http://localhost(:d+)?)$/',
-    // origin: p => {
-    //   let { header } = p;
-    //   const origin = header.origin;
-    //   console.log('origin:', origin);
-    //   return /^http:\/\/localhost(:\d+)?$/.test(origin) ? origin : false;
-    // },
     origin: '*',
   },
 
