@@ -48,12 +48,18 @@
     "lint": "mwts check",
     "lint:fix": "mwts fix",
     "ci": "npm run cov",
-    "build": "mwtsc --cleanOutDir"
+    "build": "mwtsc --cleanOutDir",
+    "bundle": "bundle && npm run build",
+    "pkg": "pkg . -t node18-win-x64 --out-path ./output"
+  },
+  "bin": "./bootstrap.js",
+  "pkg": {
+    "scripts": "dist/**/*.js"
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://gitee.com/mojoisme/interests-circle-back-end"
   },
-  "author": "anonymous",
+  "author": "Mojo Mao",
   "license": "MIT"
 }
