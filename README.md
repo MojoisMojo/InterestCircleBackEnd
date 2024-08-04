@@ -1,8 +1,31 @@
-# InterestCircle BackEnd
+# 兴趣圈后端项目
 
-## 开发环境
+## 开发和运行环境
+
+### 系统
 
 Windows 11, Intel i7, 内存 16GB；
+
+### npm & node 版本
+
+npm ：10.7.0
+node：v20.15.0
+
+## 打包流程
+
+1. 执行`npm install`安装依赖
+2. 执行`npm run build`将源文件打包到 dist 文件夹
+3. 将 dist, package.json, bootstrap.js 打包即可。
+
+## 部署和启用流程
+
+1. 确保本地有 MongoDB 数据库，并已经启用服务。
+2. 在项目根目录执行`npm install`安装依赖
+3. 执行`npm run start`启动服务。
+
+## 技术栈
+
+`ts + midwayjs/koa + typegoose + mongoose`
 
 照片存储：
 
@@ -11,18 +34,6 @@ Windows 11, Intel i7, 内存 16GB；
 数据库：
 
 - 本地 MongoDB
-
-依赖：
-
-- 见 [package.json](./package.json)
-
-IDE：
-
-- VSCode
-
-## 技术栈
-
-`ts + midwayjs/koa + typegoose + mongoose`
 
 ## 后端文件说明
 
@@ -47,30 +58,3 @@ entity 实现的接口 是 数据库存储数据的属性名和格式
 
 数据库的设计，这里我们虽然用的是非关系数据库，
 但是对于点赞人、评论这种一个记录可能有大量的内容的"关系"，还是将其设置为一个集合中，而不是一个记录的属性
-
-## QuickStart
-
-<!-- add docs here for user -->
-
-see [midway docs][midway] for more detail.
-
-### Development
-
-```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
-```
-
-### Deploy
-
-```bash
-$ npm start
-```
-
-### npm scripts
-
-- Use `npm run lint` to check code style.
-- Use `npm test` to run unit test.
-
-[midway]: https://midwayjs.org
