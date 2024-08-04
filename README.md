@@ -17,7 +17,7 @@ node：v20.15.0
 
 1. 执行`npm install`安装依赖
 2. 执行`npm run build`将源文件打包到 dist 文件夹
-3. 将 dist, package.json, bootstrap.js 打包即可。
+3. 将 dist, package.json, bootstrap.js, 以及`./public/avatar/avatar.svg` 打包即可。
 
 ## 部署和启用流程
 
