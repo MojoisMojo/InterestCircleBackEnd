@@ -1,6 +1,5 @@
 import { createApp, close, createHttpRequest } from '@midwayjs/mock';
 import { Framework } from '@midwayjs/koa';
-import { Exclusion } from 'typeorm';
 
 describe('test/controller/user.test.ts', () => {
   it('should POST /users/register', async () => {

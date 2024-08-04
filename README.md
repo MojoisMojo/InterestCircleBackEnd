@@ -1,5 +1,7 @@
 # 兴趣圈后端项目
 
+[仓库链接](https://github.com/MojoisMojo/InterestCircleBackEnd)
+
 ## 开发和运行环境
 
 ### 系统
