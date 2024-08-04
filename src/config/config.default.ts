@@ -18,6 +18,7 @@ const imageExtensions = [
   '.tif',
   '.psd',
   '.svg',
+  '.avif',
 ];
 
 export default {

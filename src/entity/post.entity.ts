@@ -23,7 +23,7 @@ export class Mpost implements IMpost {
   @prop({ default: 0 })
   public likes: number;
 
-  @prop({ default: 0 })
+  @prop({ default: 1 })
   public looks: number;
 
   @prop({ default: 0 })
