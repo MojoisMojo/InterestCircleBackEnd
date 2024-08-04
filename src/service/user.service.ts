@@ -78,7 +78,7 @@ export class UserService {
       if (!uid) {
         throw new Error('uid is required');
       }
-      if (!name && !bio && !avatarFile) {
+      if (name == null && bio == null && avatarFile == null) {
         this.ctx.logger.warn('no change in user info');
         return null;
       }
@@ -108,7 +108,7 @@ export class UserService {
       if(name && name !== user.name){
         user.name = name;
       }
-      if(bio && bio !== user.bio){
+      if(bio != null && bio !== user.bio){
         user.bio = bio;
       }
       await user.save();
@@ -154,6 +154,6 @@ export class UserService {
   private static generateAvatarUrl(uid: string, avatarUrl: string): string {
     let t = avatarUrl.split('.');
     let typeString = t[t.length - 1];
-    return `${uid}.${typeString}`;
+    return `${uid}${new Date().getTime().toString(36)}.${typeString}`;
   }
 }

@@ -114,10 +114,18 @@ export class UserController {
       };
     }
     let avatarFile = null;
-    if(avatarFiles && avatarFiles.length > 0){
+    if (avatarFiles && avatarFiles.length > 0) {
       avatarFile = avatarFiles[0];
       userInfo.avatarUrl = avatarFile.filename;
     }
-    return this.userService.changeUserInfo(userInfo, avatarFile);
+    const newUserInfo = await this.userService.changeUserInfo(
+      userInfo,
+      avatarFile
+    );
+    return {
+      status: 'success',
+      msg: '更新成功',
+      data: { user: newUserInfo },
+    };
   }
 }
