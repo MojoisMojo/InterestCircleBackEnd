@@ -2,14 +2,20 @@ import {
   Controller,
   Post,
   Get,
-  // Put,
+  Put,
   Param,
   Body,
   Inject,
+  Files,
+  Fields,
 } from '@midwayjs/core';
 import { UserService } from '../service/user.service';
-import { ICreateUserOptions } from '../interface/user.interface';
+import {
+  ICreateUserOptions,
+  IUserUpdateInfo,
+} from '../interface/user.interface';
 import { Context } from '@midwayjs/koa';
+// import { avatarPath } from '../utils/ImgPath';
 
 @Controller('/users')
 export class UserController {
@@ -22,12 +28,12 @@ export class UserController {
   async login(@Body() body: { email: string; password: string }) {
     // console.log(body);
     let { email, password } = body;
-    if(!email || !password){
+    if (!email || !password) {
       return {
-        stauts:'failed',
-        msg:'未收到用户名或密码',
-        data:{}
-      }
+        stauts: 'failed',
+        msg: '未收到用户名或密码',
+        data: {},
+      };
     }
     let userInfo = await this.userService.checkPassword({ email, password });
     if (!userInfo) {
@@ -87,8 +93,31 @@ export class UserController {
       ? { status: 'success', data: { users: usersInfo }, msg: '获取成功' }
       : { status: 'failed', data: { cid }, msg: '获取失败' };
   }
-  // @Put('/:uid') 暂时不需要实现
-  // async updateUser(@Param() uid: string, @Body() user: Partial<IUser>) {
-  //   return this.userService.updateUser(uid, user);
-  // }
+  @Put('/uid')
+  async updateUser(
+    @Files() avatarFiles: any[],
+    @Fields() userInfo: IUserUpdateInfo
+  ) {
+    if (!avatarFiles && !userInfo) {
+      return {
+        status: 'failed',
+        data: {},
+        msg: '未收到更新信息',
+      };
+    }
+    const uid = userInfo.uid;
+    if (!uid) {
+      return {
+        status: 'failed',
+        data: {},
+        msg: '未收到用户id',
+      };
+    }
+    let avatarFile = null;
+    if(avatarFiles && avatarFiles.length > 0){
+      avatarFile = avatarFiles[0];
+      userInfo.avatarUrl = avatarFile.filename;
+    }
+    return this.userService.changeUserInfo(userInfo, avatarFile);
+  }
 }

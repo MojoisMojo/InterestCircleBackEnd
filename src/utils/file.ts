@@ -44,4 +44,17 @@ async function storeMultipleImgs(
   return true;
 }
 
-export { storeSingleImg, storeMultipleImgs };
+async function deleteSingleImg(targetDirRPath: string, imgname: string) {
+  const targetDir = path.join(projectRoot, targetDirRPath);
+  const targetFilePath = path.join(targetDir, imgname);
+  if(!fs.existsSync(targetDir) || !imgname){
+    return false;
+  }
+  if (fs.existsSync(targetFilePath)) {
+    fs.unlinkSync(targetFilePath);
+    return true;
+  }
+  return false;
+}
+
+export { storeSingleImg, storeMultipleImgs, deleteSingleImg };

@@ -6,7 +6,7 @@ import {
   // index,
 } from '@typegoose/typegoose';
 import { mDecode } from '../utils/id';
-import { UserInfo, UserSingpleInfo } from '../model/user.model';
+import { UserInfo, UserUpdateInfo } from '../model/user.model';
 import { PosterInfo } from '../model/post.model';
 import { CommenterInfo } from '../model/comment.model';
 // import { CircleMember } from './circleMember.entity';
@@ -81,8 +81,8 @@ export class User {
       avatarUrl: this.avatarUrl,
     });
   }
-  public getSimplInfo(): UserSingpleInfo {
-    return new UserSingpleInfo({
+  public getSimplInfo(): UserUpdateInfo {
+    return new UserUpdateInfo({
       uid: this.uid,
       name: this.name,
       avatarUrl: this.avatarUrl,

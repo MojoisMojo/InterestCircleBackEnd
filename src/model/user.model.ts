@@ -1,4 +1,4 @@
-import { IUserInfo, IUserSinpleInfo } from '../interface/user.interface';
+import { IUserInfo, IUserUpdateInfo } from '../interface/user.interface';
 import { avatarPath } from '../utils/ImgPath';
 const userAvatarUrl = (path: string) =>
   [...avatarPath, path ? path : 'avatar.svg'].join('/');
@@ -34,13 +34,13 @@ export class UserInfo implements IUserInfo {
   }
 }
 
-export class UserSingpleInfo implements IUserSinpleInfo {
+export class UserUpdateInfo implements IUserUpdateInfo {
   uid: string;
-  name: string;
-  avatarUrl: string;
-  bio: string;
+  name?: string;
+  bio?: string;
+  avatarUrl?: string;
 
-  constructor({ uid, name, avatarUrl, bio }: IUserSinpleInfo) {
+  constructor({ uid, name, avatarUrl, bio }: IUserUpdateInfo) {
     this.uid = uid;
     this.name = name;
     this.avatarUrl = userAvatarUrl(avatarUrl);

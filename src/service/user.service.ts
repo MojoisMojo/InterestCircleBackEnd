@@ -7,10 +7,14 @@ import { mEncode, mGenerateRandomId } from '../utils/id';
 import {
   ICreateUserOptions,
   IGetUserOptions,
+  IUserUpdateInfo,
 } from '../interface/user.interface';
 import { Context } from '@midwayjs/koa';
 import { assert } from 'console';
 import { CircleMember } from '../entity/circleMember.entity';
+import { deleteSingleImg, storeSingleImg } from '../utils/file';
+import path = require('path');
+import { avatarPath } from '../utils/ImgPath';
 
 @Provide()
 export class UserService {
@@ -64,6 +68,56 @@ export class UserService {
       return null;
     }
   }
+
+  async changeUserInfo(
+    options: IUserUpdateInfo,
+    avatarFile?: any
+  ): Promise<UserInfo | null> {
+    try {
+      let { uid, name, bio, avatarUrl } = options;
+      if (!uid) {
+        throw new Error('uid is required');
+      }
+      if (!name && !bio && !avatarFile) {
+        this.ctx.logger.warn('no change in user info');
+        return null;
+      }
+      let user = await this.userModel.findOne({ uid }).exec();
+      if (!user) {
+        throw new Error('user not found');
+      }
+      if (avatarFile) {
+        let newAvatarUrl = UserService.generateAvatarUrl(uid, avatarUrl);
+        // 删除原头像
+        const oldAvatarUrl = user.avatarUrl;
+        deleteSingleImg(path.join(...avatarPath), oldAvatarUrl)
+          .then(deleteRes => {
+            this.ctx.logger.info('Delete avatar Success');
+            // 储存新头像
+            storeSingleImg(path.join(...avatarPath), newAvatarUrl, avatarFile)
+              .then(res => {
+                this.ctx.logger.info('Store avatar Success');
+              })
+              .catch(e => {
+                this.ctx.logger.warn('Error When Storing avatar', e);
+              });
+          })
+          .catch(e => this.ctx.logger.warn('Error When Deleting avatar', e));
+        user.avatarUrl = newAvatarUrl;
+      }
+      if(name && name !== user.name){
+        user.name = name;
+      }
+      if(bio && bio !== user.bio){
+        user.bio = bio;
+      }
+      await user.save();
+      return user.getUserInfo();
+    } catch (e) {
+      this.ctx.logger.error('in user.service, when changeUserInfo: ', e);
+      return null;
+    }
+  }
   async getUsersInfoByCid(cid: string): Promise<UserInfo[] | null> {
     try {
       let members = await this.circleMemberModel.find({ cid }).limit(10).exec();
@@ -95,5 +149,11 @@ export class UserService {
     return mEncode(
       uemail.replace('@', mGenerateRandomId(4)).replace(/[^a-zA-Z0-9_-]/g, '')
     );
+  }
+
+  private static generateAvatarUrl(uid: string, avatarUrl: string): string {
+    let t = avatarUrl.split('.');
+    let typeString = t[t.length - 1];
+    return `${uid}.${typeString}`;
   }
 }

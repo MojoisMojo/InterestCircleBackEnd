@@ -36,9 +36,9 @@ export interface IUserInfo {
   createAt: Date;
 }
 
-export interface IUserSinpleInfo {
+export interface IUserUpdateInfo {
   uid: string;
-  name: string;
-  avatarUrl: string;
-  bio: string;
+  name?: string;
+  bio?: string;
+  avatarUrl?: string;
 }
